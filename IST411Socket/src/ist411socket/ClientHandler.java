@@ -118,37 +118,40 @@ public class ClientHandler implements Runnable {
 //                     System.out.println("M A P " + mapPath.get("zip").toString());
 //                     System.out.println("M A P " + mapPath.get("state").toString());
 //                     System.out.println("MAP split Attemp "+ mapPath.get("street").toString());
-                    String tempName;
-                    String tempAddress;
-                    String tempState;
-                    int tempZip;
-                    if (mapPath.get("street" )!= null)
-                            {
-                            if(mapPath.get("street").toString().contains("+")) {
-                        parts = mapPath.get("street").toString().split("\\+");
 
-//                            if(parts[0].getClass().isI)
-                        System.out.println("parts 1 " + parts[0]);
-                        System.out.println("parts 2 " + parts[1]);
-                        user = new AddressModel(mapPath.get("name").toString(), Integer.parseInt(parts[0]), parts[1], Integer.parseInt(mapPath.get("zip").toString()), mapPath.get("state").toString());
-                            }
-                    } else {
-                        user = new AddressModel();
-                        if (mapPath.get("name")!= null) {
-                            user.setName(mapPath.get("name").toString());
-                        }if (mapPath.get("state") != null) {
-                            user.setState(mapPath.get("state").toString());
-                        }if (mapPath.get("zip") != null) {
-                            user.setZip(Integer.parseInt(mapPath.get("zip").toString()));
-                        }if (mapPath.get("street")!= null) {
-                            user.setStreetName(mapPath.get("street").toString());
-                        }
+                    user = new AddressModel();
+                    if (mapPath.get("name") != null) {
+                        user.setName(mapPath.get("name").toString());
                     }
+                    if (mapPath.get("state") != null) {
+//                            if(mapPath.get("street").toString().contains("+")) {
+//                        parts = mapPath.get("street").toString().split("\\+");
+//
+//                        System.out.println("parts 1 " + parts[0]);
+//                        System.out.println("parts 2 " + parts[1]);
+//                   
+                        user.setState(mapPath.get("state").toString());
+                    }
+                    if (mapPath.get("zip") != null) {
+                        user.setZip(Integer.parseInt(mapPath.get("zip").toString()));
+                    }
+                    if (mapPath.get("street") != null) {
+                        user.setStreet(mapPath.get("street").toString());
+                    }
+//                        user = new AddressModel();
+//                        if (mapPath.get("name")!= null) {
+//                            user.setName(mapPath.get("name").toString());
+//                        }if (mapPath.get("state") != null) {
+//                            user.setState(mapPath.get("state").toString());
+//                        }if (mapPath.get("zip") != null) {
+//                            user.setZip(Integer.parseInt(mapPath.get("zip").toString()));
+//                        }if (mapPath.get("street")!= null) {
+//                            user.setStreetName(mapPath.get("street").toString());
+//                        }
+                    
 
-                    if (user.validate() == true) {
+                    if (user.isValidate() == true) {
                         System.out.println("User is valid");
-
-//                            tyView.sendResponse(socket, 200, tyView.getHtml());
                         out.write("HTTP/1.1 200 OK\n\n");
                         out.write(tyView.getHtml());
 
@@ -159,10 +162,9 @@ public class ClientHandler implements Runnable {
                         System.out.println("Path received");
                         out.write("HTTP/1.1 200 OK\n\n");
 
-//                        user = new AddressModel(mapPath.get("name").toString(), Integer.parseInt(parts[0]), parts[1], Integer.parseInt(mapPath.get("zip").toString()), mapPath.get("state").toString());
-                        out.write(addressView.getHtml(
-//                        if(user)
-                        ));
+                        out.write(addressView.getHtml(mapPath
+                                
+                                ));
 
                         out.write("\n");
 
