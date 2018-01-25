@@ -44,6 +44,14 @@ public class AddressView {
 
         if (mapPath.get("name") != null) {
             tempName = mapPath.get("name").toString();
+            if (mapPath.get("name").toString().contains("+")) {
+//                parts = mapPath.get("street").toString().split("\\+");
+                tempName = tempName.replaceAll("\\+", "&nbsp;");
+//                System.out.println("parts 1 in view" + parts[0]);
+//                System.out.println("parts 2 inview " + parts[1]);
+                System.out.println("Name Cotains a +");
+                System.out.println(tempName);
+            }
         }
         if (mapPath.get("state") != null) {
             tempState = mapPath.get("state").toString();
@@ -51,10 +59,12 @@ public class AddressView {
         if (mapPath.get("street") != null) {
             tempStreet = mapPath.get("street").toString();
             if (mapPath.get("street").toString().contains("+")) {
-                parts = mapPath.get("street").toString().split("\\+");
-
-                System.out.println("parts 1 in view" + parts[0]);
-                System.out.println("parts 2 inview " + parts[1]);
+//                parts = mapPath.get("street").toString().split("\\+");
+                tempStreet = tempStreet.replaceAll("\\+", "&nbsp;");
+//                System.out.println("parts 1 in view" + parts[0]);
+//                System.out.println("parts 2 inview " + parts[1]);
+                System.out.println("Street Cotains a +");
+                System.out.println(tempStreet);
             }
         }
         if (mapPath.get("zip") != null) {
@@ -67,15 +77,18 @@ public class AddressView {
         html.append("Name: <input type='text' name='name' value=" + tempName + "><br>"
                 //                + "Street: <input type='text' name='street' value="+ parts[0] +" " + parts[1] +"><br>"
                 + "Street: <input type='text' name='street' value=" + tempStreet + "><br>"
-                + "State: <input type='text' name='state' value=" + tempState + "><br>"
-                + "Zip: <input type='text' name='zip' value=" + tempZip + "><br>");
+                + "State: <input type='text' name='state' value=" + tempState + "><br>");
+        if (tempZip == 0) {
+            html.append("Zip: <input type='text' name='zip' value=" + "" + "><br>");
+        } else {
+            html.append("Zip: <input type='text' name='zip' value=" + tempZip + "><br>");
+        }
         html.append("<input type='submit' value='Submit'><br>");
         html.append("</form> <br><br><h1>error</h1>"
                 + "</body></html>");
         return html.toString();
     }
 
-    
 //    public String getHtml() {
 //         html.append("<html><body>");
 //        html.append("<form action='/submit'>");

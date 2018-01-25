@@ -6,6 +6,8 @@
 package ist411socket;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -25,6 +27,7 @@ public class ClientHandler implements Runnable {
     ThankYouView tyView = new ThankYouView();
     HashMap mapPath = null;
     String[] parts;
+    ListView listView = new ListView();
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -97,6 +100,16 @@ public class ClientHandler implements Runnable {
 
 //                sendResponse(socket, 405, "Method Not Allowed");
                 } //   
+                else if (path.equals("/list")) {
+//                        addressView.sendResponse(socket, 200, addressView.getHtml());
+
+                    System.out.println("Path received");
+                    out.write("HTTP/1.1 200 OK\n\n");
+                    out.write(listView.getHtml("test.csv"));
+                    out.write("\n");
+
+//                sendResponse(socket, 405, "Method Not Allowed");
+                } //   
                 else if (path.contains("/submit")) {
 
                     System.out.println("Submit Recv");
@@ -118,14 +131,24 @@ public class ClientHandler implements Runnable {
 //                     System.out.println("M A P " + mapPath.get("zip").toString());
 //                     System.out.println("M A P " + mapPath.get("state").toString());
 //                     System.out.println("MAP split Attemp "+ mapPath.get("street").toString());
-
                     user = new AddressModel();
                     if (mapPath.get("name") != null) {
-                        user.setName(mapPath.get("name").toString());
+
+                        if (mapPath.get("name").toString().contains("+")) {
+                            user.setName(mapPath.get("name").toString().replaceAll("\\+", ","));
+                        } 
+                        else if (mapPath.get("name").toString().contains("\\%A0")) {
+                            user.setName(mapPath.get("name").toString().replaceAll("\\%A0", ","));
+                        }
+                        else {
+                            user.setName(mapPath.get("name").toString());
+
+                        }
+
+//                        user.setName(mapPath.get("name").toString());
                     }
                     if (mapPath.get("state") != null) {
-//                            if(mapPath.get("street").toString().contains("+")) {
-//                        parts = mapPath.get("street").toString().split("\\+");
+//                         
 //
 //                        System.out.println("parts 1 " + parts[0]);
 //                        System.out.println("parts 2 " + parts[1]);
@@ -136,7 +159,17 @@ public class ClientHandler implements Runnable {
                         user.setZip(Integer.parseInt(mapPath.get("zip").toString()));
                     }
                     if (mapPath.get("street") != null) {
-                        user.setStreet(mapPath.get("street").toString());
+
+//                        parts = mapPath.get("street").toString().split("\\+");
+                        if (mapPath.get("street").toString().contains("+")) {
+                            user.setStreet(mapPath.get("street").toString().replaceAll("\\+", ","));
+                        }else if (mapPath.get("street").toString().contains("%A0")) {
+                            user.setStreet(mapPath.get("street").toString().replaceAll("\\%A0", ","));
+                        } else {
+                            user.setStreet(mapPath.get("street").toString());
+
+                        }
+
                     }
 //                        user = new AddressModel();
 //                        if (mapPath.get("name")!= null) {
@@ -148,7 +181,6 @@ public class ClientHandler implements Runnable {
 //                        }if (mapPath.get("street")!= null) {
 //                            user.setStreetName(mapPath.get("street").toString());
 //                        }
-                    
 
                     if (user.isValidate() == true) {
                         System.out.println("User is valid");
@@ -156,6 +188,37 @@ public class ClientHandler implements Runnable {
                         out.write(tyView.getHtml());
 
                         out.write("\n");
+
+//
+                        FileWriter fout = new FileWriter("test.csv", true);
+//fout.write("Name, Street, State, ZIP\n");
+                        fout.write(user.getName() + "," + user.getStreet() + "," + user.getState() + "," + user.getZip() + "\n");
+                        fout.close();
+//fout.flush();
+
+//                         PrintWriter pw = new PrintWriter(new File("test.csv"));
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("Name");
+//        sb.append(',');       
+//        sb.append("Street");
+//        sb.append(',');      
+//        sb.append("State");
+//        sb.append(',');      
+//        sb.append("ZIP");
+//        sb.append('\n');
+//
+//            sb.append(user.getName());
+//        sb.append(',');       
+//        sb.append(user.getStreet());
+//        sb.append(',');      
+//        sb.append(user.getState());
+//        sb.append(',');      
+//        sb.append(user.getZip());
+//        sb.append('\n');
+//        pw.write(sb.toString());
+//        pw.close();
+//        System.out.println("done!");
+//                        
                     } else {
                         System.out.println("User is NOT valid");
 
@@ -163,8 +226,7 @@ public class ClientHandler implements Runnable {
                         out.write("HTTP/1.1 200 OK\n\n");
 
                         out.write(addressView.getHtml(mapPath
-                                
-                                ));
+                        ));
 
                         out.write("\n");
 
