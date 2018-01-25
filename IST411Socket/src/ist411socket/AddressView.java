@@ -8,23 +8,24 @@ package ist411socket;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashMap;
 
 /**
  *
  * @author ajl5735
  */
 public class AddressView {
-    
+
     private StringBuilder html = new StringBuilder();
 
     public AddressView() {
-       
+
 //        html.append("<b>Hello World!</b><BR>");
 //        html.append("</html>");
     }
 
     public String getHtml() {
-         html.append("<html><body>");
+        html.append("<html><body>");
         html.append("<form action='/submit'>");
         html.append("Name: <input type='text' name='name'><br>"
                 + "Street: <input type='text' name='street'><br>"
@@ -35,20 +36,45 @@ public class AddressView {
                 + "</body></html>");
         return html.toString();
     }
-    
-    
-    public String getHtml(String e) {
-         html.append("<html><body>");
+
+    public String getHtml(HashMap mapPath) {
+        String tempName = "", tempState = "", tempStreet = "";
+        int tempZip = 0;
+        String[] parts;
+
+        if (mapPath.get("name") != null) {
+            tempName = mapPath.get("name").toString();
+        }
+        if (mapPath.get("state") != null) {
+            tempState = mapPath.get("state").toString();
+        }
+        if (mapPath.get("street") != null) {
+            tempStreet = mapPath.get("street").toString();
+            if (mapPath.get("street").toString().contains("+")) {
+                parts = mapPath.get("street").toString().split("\\+");
+
+                System.out.println("parts 1 in view" + parts[0]);
+                System.out.println("parts 2 inview " + parts[1]);
+            }
+        }
+        if (mapPath.get("zip") != null) {
+            tempZip = Integer.parseInt(mapPath.get("zip").toString());
+
+        }
+
+        html.append("<html><body>");
         html.append("<form action='/submit'>");
-        html.append("Name: <input type='text' name='name'><br>"
-                + "Street: <input type='text' name='street'><br>"
-                + "State: <input type='text' name='state'><br>"
-                + "Zip: <input type='text' name='zip'><br>");
+        html.append("Name: <input type='text' name='name' value=" + tempName + "><br>"
+                //                + "Street: <input type='text' name='street' value="+ parts[0] +" " + parts[1] +"><br>"
+                + "Street: <input type='text' name='street' value=" + tempStreet + "><br>"
+                + "State: <input type='text' name='state' value=" + tempState + "><br>"
+                + "Zip: <input type='text' name='zip' value=" + tempZip + "><br>");
         html.append("<input type='submit' value='Submit'><br>");
         html.append("</form> <br><br><h1>error</h1>"
                 + "</body></html>");
         return html.toString();
-    }   
+    }
+
     
 //    public String getHtml() {
 //         html.append("<html><body>");
@@ -62,9 +88,6 @@ public class AddressView {
 //                + "</body></html>");
 //        return html.toString();
 //    }
-    
-    
-    
 //    public void sendResponse(Socket socket,
 //            int statusCode, String html) {
 //        String statusLine;
@@ -104,6 +127,4 @@ public class AddressView {
 //            // Handle exception
 //        }
 //    }
-    
-    
 }
