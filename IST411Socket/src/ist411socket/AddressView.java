@@ -46,7 +46,7 @@ public class AddressView {
             tempName = mapPath.get("name").toString();
             if (mapPath.get("name").toString().contains("+")) {
 //                parts = mapPath.get("street").toString().split("\\+");
-                tempName = tempName.replaceAll("\\+", "&nbsp;");
+                tempName = tempName.replaceAll("\\+", " ");
 //                System.out.println("parts 1 in view" + parts[0]);
 //                System.out.println("parts 2 inview " + parts[1]);
                 System.out.println("Name Cotains a +");
@@ -60,7 +60,7 @@ public class AddressView {
             tempStreet = mapPath.get("street").toString();
             if (mapPath.get("street").toString().contains("+")) {
 //                parts = mapPath.get("street").toString().split("\\+");
-                tempStreet = tempStreet.replaceAll("\\+", "&nbsp;");
+                tempStreet = tempStreet.replaceAll("\\+", " ");
 //                System.out.println("parts 1 in view" + parts[0]);
 //                System.out.println("parts 2 inview " + parts[1]);
                 System.out.println("Street Cotains a +");
@@ -74,9 +74,9 @@ public class AddressView {
 
         html.append("<html><body>");
         html.append("<form action='/submit'>");
-        html.append("Name: <input type='text' name='name' value=" + tempName + "><br>"
+        html.append("Name: <input type='text' name='name' value=\'" + tempName + "\'><br>"
                 //                + "Street: <input type='text' name='street' value="+ parts[0] +" " + parts[1] +"><br>"
-                + "Street: <input type='text' name='street' value=" + tempStreet + "><br>"
+                + "Street: <input type='text' name='street' value=\'" + tempStreet + "\'><br>"
                 + "State: <input type='text' name='state' value=" + tempState + "><br>");
         if (tempZip == 0) {
             html.append("Zip: <input type='text' name='zip' value=" + "" + "><br>");
