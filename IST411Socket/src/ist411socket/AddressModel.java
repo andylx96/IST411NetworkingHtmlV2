@@ -5,6 +5,7 @@
  */
 package ist411socket;
 
+import java.util.HashMap;
 import java.util.StringTokenizer;
 
 /**
@@ -94,4 +95,23 @@ public class AddressModel {
     public void setStreet(String street) {
         this.street = street;
     }
+
+    public String serializeToString() {
+        String a = this.getName().replaceAll("\\ ", "_") +","+ this.street.replaceAll("\\ ", "_")+"," + this.state+"," + this.zip;
+        return a;
+    }
+
+    static AddressModel deSerializeFromString(String s) {
+        AddressModel a = new AddressModel();
+       String[] tempSplit;
+        
+        tempSplit = s.split(",");
+        
+        a.setName(tempSplit[0].replaceAll("_", "\\ "));
+        a.setStreet(tempSplit[1].replaceAll("_","\\ "));
+        a.setState(tempSplit[2]);
+        a.setZip(Integer.parseInt(tempSplit[3]));
+        return a;
+    }
+
 }

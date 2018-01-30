@@ -17,12 +17,12 @@ import java.util.Scanner;
  *
  * @author ajl5735
  */
-public class ListView {
+public class AddressListView {
 
     private StringBuilder html = new StringBuilder();
     private String dataPath;
 
-    public ListView() {
+    public AddressListView() {
 
     }
 
