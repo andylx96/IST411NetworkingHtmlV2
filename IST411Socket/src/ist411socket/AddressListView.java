@@ -45,10 +45,10 @@ public class AddressListView {
 //                   System.out.println(inArray[2]);
 //                   System.out.println(inArray[3]);
 //                   System.out.println(inArray[4]);
-                tempNameList.add(inArray[0]+" "+ inArray[1]);
-                tempStreetList.add(inArray[2]+" "+ inArray[3]+" "+ inArray[4]);
-                tempStateList.add(inArray[5]);
-                tempZipList.add(inArray[6]);
+                tempNameList.add(inArray[0].replaceAll("_", " "));
+                tempStreetList.add(inArray[1].replaceAll("_", " "));
+                tempStateList.add(inArray[2].replaceAll("_", " "));
+                tempZipList.add(inArray[3].replaceAll("_", " "));
 
                 System.out.println("NameList " + tempNameList);
             }

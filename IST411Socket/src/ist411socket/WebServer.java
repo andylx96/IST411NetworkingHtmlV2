@@ -20,21 +20,26 @@ public class WebServer {
     }
 
     public WebServer() {
+        ClientHandler ch = null;
         System.out.println("Webserver Started");
         try (ServerSocket serverSocket = new ServerSocket(12345)) {
             while (true) {
                 System.out.println("Waiting for client request");
                 Socket remote = serverSocket.accept();
                 System.out.println("Connection made");
-                new Thread(new ClientHandler(remote)).start();
+//                new Thread(new ClientHandler(remote)).start();
+//                if (ch == null) {                    
+                ch = new ClientHandler(remote);
+//                    System.out.println("Creating CH");
+//                }
+//                ch.handleRequest(remote);
+
             }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 }
-
-
 
 ///*
 // * To change this license header, choose License Headers in Project Properties.

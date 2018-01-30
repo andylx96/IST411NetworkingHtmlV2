@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author ajl5735
  */
-public class ClientHandler implements Runnable {
+public class ClientHandler {
 
     private final Socket socket;
     HelloWorldView helloView = new HelloWorldView();
@@ -31,22 +31,29 @@ public class ClientHandler implements Runnable {
     HashMap mapPath = null;
     String[] parts;
     AddressListView listView = new AddressListView();
-    AddressListModel addressListModel = new AddressListModel();
+    AddressListModel addressListModel;
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
-    }
-
-    @Override
-    public void run() {
         System.out.println("\nClientHandler Started for "
                 + this.socket);
+        this.addressListModel = AddressListModel.makeAddressListFromFile("fileName.csv");
         handleRequest(this.socket);
         System.out.println("ClientHandler Terminated for "
                 + this.socket + "\n");
+        
     }
 
+//    @Override
+//    public void run() {
+//        System.out.println("\nClientHandler Started for "
+//                + this.socket);
+//        handleRequest(this.socket);
+//        System.out.println("ClientHandler Terminated for "
+//                + this.socket + "\n");
+//    }
     public void handleRequest(Socket socket) {
+
         try (BufferedReader in = new BufferedReader(
                 new InputStreamReader(socket.getInputStream()));
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);) {
@@ -106,10 +113,12 @@ public class ClientHandler implements Runnable {
                 } //   
                 else if (path.equals("/list")) {
 //                        addressView.sendResponse(socket, 200, addressView.getHtml());
+                    
+//addressListModel.saveToFile("fileName");
 
                     System.out.println("Path received");
                     out.write("HTTP/1.1 200 OK\n\n");
-                    out.write(listView.getHtml("test.csv"));
+                    out.write(listView.getHtml("fileName.csv"));
                     out.write("\n");
 
 //                sendResponse(socket, 405, "Method Not Allowed");
@@ -129,19 +138,18 @@ public class ClientHandler implements Runnable {
                     }
 
                     System.out.println(mapPath.toString());
-                    
+
                     user = new AddressModel();
                     if (mapPath.get("name") != null) {
 
                         if (mapPath.get("name").toString().contains("+")) {
                             user.setName(mapPath.get("name").toString().replaceAll("\\+", " "));
-                        } 
-                        else {
+                        } else {
                             user.setName(mapPath.get("name").toString());
                         }
                     }
                     if (mapPath.get("state") != null) {
-                        
+
                         user.setState(mapPath.get("state").toString());
                     }
 
@@ -177,7 +185,11 @@ public class ClientHandler implements Runnable {
 
                         out.write("\n");
                         addressListModel.getAddressArrayList().add(user);
+                        System.out.println(user.serializeToString());
+                        System.out.println(addressListModel.getAddressArrayList().size());
+                        addressListModel.saveToFile("fileName");
 
+                        
                     } else {
                         System.out.println("User is NOT valid");
 

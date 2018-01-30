@@ -98,6 +98,7 @@ public class AddressModel {
 
     public String serializeToString() {
         String a = this.getName().replaceAll("\\ ", "_") +","+ this.street.replaceAll("\\ ", "_")+"," + this.state+"," + this.zip;
+        System.out.println("String serialized: " + a);
         return a;
     }
 
@@ -111,6 +112,7 @@ public class AddressModel {
         a.setStreet(tempSplit[1].replaceAll("_","\\ "));
         a.setState(tempSplit[2]);
         a.setZip(Integer.parseInt(tempSplit[3]));
+        System.out.println("DeSerialized Value: "+ a.getName() + " "+ a.getStreet() + " "+ a.getState() + " "+ a.getZip());
         return a;
     }
 
