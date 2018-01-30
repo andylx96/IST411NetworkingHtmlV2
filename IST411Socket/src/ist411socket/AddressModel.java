@@ -44,7 +44,10 @@ public class AddressModel {
                     if (this.zip != 0) {
 
                         if (this.zip > 0 && this.zip < 99999) {
+                         
+                            if(this.street.matches(".*\\d+.*")&&this.street.matches(".*[a-z].*")){
                             valididty = true;
+                            }
                         }
 
                     }
