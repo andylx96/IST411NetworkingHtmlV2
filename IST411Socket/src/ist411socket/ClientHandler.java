@@ -5,6 +5,7 @@
  */
 package ist411socket;
 
+import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
@@ -32,7 +33,8 @@ public class ClientHandler {
     String[] parts;
     AddressListView listView = new AddressListView();
     AddressListModel addressListModel;
-
+    PublicView publicView = new PublicView();
+    
     public ClientHandler(Socket socket) {
         this.socket = socket;
         System.out.println("\nClientHandler Started for "
@@ -41,7 +43,7 @@ public class ClientHandler {
         handleRequest(this.socket);
         System.out.println("ClientHandler Terminated for "
                 + this.socket + "\n");
-        
+
     }
 
 //    @Override
@@ -74,6 +76,7 @@ public class ClientHandler {
                     out.write("HTTP/1.1 200 OK\n\n");
                     out.write(helloView.getHtml());
                     out.write("\n");
+
 //                        System.out.println(helloView.getHtml());
 //                sendResponse(socket, 405, "Method Not Allowed");
                 } //                System.out.println("Get method processed");
@@ -113,9 +116,8 @@ public class ClientHandler {
                 } //   
                 else if (path.equals("/list")) {
 //                        addressView.sendResponse(socket, 200, addressView.getHtml());
-                    
-//addressListModel.saveToFile("fileName");
 
+//addressListModel.saveToFile("fileName");
                     System.out.println("Path received");
                     out.write("HTTP/1.1 200 OK\n\n");
                     out.write(listView.getHtml("fileName.csv"));
@@ -189,7 +191,6 @@ public class ClientHandler {
                         System.out.println(addressListModel.getAddressArrayList().size());
                         addressListModel.saveToFile("fileName");
 
-                        
                     } else {
                         System.out.println("User is NOT valid");
 
@@ -207,7 +208,20 @@ public class ClientHandler {
 
                 } else {
                     System.out.println("404 Error");
+//                    out.write("HTTP/1.1 404 Not Found\n\n");
+           
+                    
+                    if(checkFile(path)==true){
+                                   out.write("HTTP/1.1 200 OK\n\n");
+                    out.write(publicView.getHtml(path));
+                    out.write("\n");
+                    }else{
+                    
+                    
                     out.write("HTTP/1.1 404 Not Found\n\n");
+                        System.out.println("FileNotFoundEither");
+                    }
+                    
                 }
             }
         } catch (Exception e) {
@@ -230,5 +244,20 @@ public class ClientHandler {
         } catch (IOException ex) {
             System.out.println("Unable To Create File");
         }
+    }
+
+    static public boolean checkFile(String path) {
+
+        File tmpDir = new File( path.replaceFirst("/", ""));
+        boolean exists = tmpDir.exists();
+        if (exists == true) {
+            System.out.println("File Check is true at: "+path.replaceFirst("/", ""));
+
+            return true;
+        } else {
+            System.out.println("FileCheck is False at: " + path.replaceFirst("/", ""));
+            return false;
+        }
+
     }
 }
