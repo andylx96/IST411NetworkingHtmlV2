@@ -7,16 +7,20 @@ package ist411socket;
 
 import java.awt.Image;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -34,7 +38,11 @@ public class ClientHandler {
     AddressListView listView = new AddressListView();
     AddressListModel addressListModel;
     PublicView publicView = new PublicView();
-    
+//    ImageIcon image = new ImageIcon("fw/jpg");
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    DataOutputStream dos;
+    ErrorView errorView = new ErrorView();
+
     public ClientHandler(Socket socket) {
         this.socket = socket;
         System.out.println("\nClientHandler Started for "
@@ -43,6 +51,11 @@ public class ClientHandler {
         handleRequest(this.socket);
         System.out.println("ClientHandler Terminated for "
                 + this.socket + "\n");
+//        try {
+//            dos = new DataOutputStream(socket.getOutputStream());
+//        } catch (IOException ex) {
+//            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+//        }
 
     }
 
@@ -55,7 +68,7 @@ public class ClientHandler {
 //                + this.socket + "\n");
 //    }
     public void handleRequest(Socket socket) {
-
+//OutputStream os = socket.getOutputStream()
         try (BufferedReader in = new BufferedReader(
                 new InputStreamReader(socket.getInputStream()));
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);) {
@@ -209,19 +222,42 @@ public class ClientHandler {
                 } else {
                     System.out.println("404 Error");
 //                    out.write("HTTP/1.1 404 Not Found\n\n");
-           
-                    
-                    if(checkFile(path)==true){
-                                   out.write("HTTP/1.1 200 OK\n\n");
-                    out.write(publicView.getHtml(path));
-                    out.write("\n");
-                    }else{
-                    
-                    
-                    out.write("HTTP/1.1 404 Not Found\n\n");
+
+                    if (checkFile(path) == true) {
+                        out.write("HTTP/1.1 200 OK\n");
+                        out.write("Content-Type: image/png\n");
+                        
+                        out.write("Content-Type: test/html\n");
+                        System.out.println("Content-Type: image/png\n\n");
+                            out.write("test");
+                            
+//                        File file = new File("rb.png");
+                        File file = new File(path.replaceFirst("/", ""));
+                        System.out.println("File Chekc inside else: " + path.replaceFirst("/", ""));
+                        
+                        
+                        byte[] bytesFromFile = PublicView.getBytes(file);
+//                                   out.write(bytesFromFile.toString());
+//String s = "HTTP/1.1 200 OK\n\n";
+                        socket.getOutputStream().write(bytesFromFile);
+//                        socket.getOutputStream().write(bytesFromFile);
+                        System.out.println(bytesFromFile.length);
+//out.wr
+
+//                    out.write(publicView.getHtml(path));
+                        out.write("\n");
+                        System.out.println("TestTrue");
+                        socket.getOutputStream().flush();
+                        socket.getOutputStream().close();
+
+                    } else {
+
+                        out.write("HTTP/1.1 404 Not Found\n\n");
+                        out.write(errorView.getHtml());
+                        out.write("\n");
                         System.out.println("FileNotFoundEither");
                     }
-                    
+
                 }
             }
         } catch (Exception e) {
@@ -248,10 +284,10 @@ public class ClientHandler {
 
     static public boolean checkFile(String path) {
 
-        File tmpDir = new File( path.replaceFirst("/", ""));
+        File tmpDir = new File(path.replaceFirst("/", ""));
         boolean exists = tmpDir.exists();
         if (exists == true) {
-            System.out.println("File Check is true at: "+path.replaceFirst("/", ""));
+            System.out.println("File Check is true at: " + path.replaceFirst("/", ""));
 
             return true;
         } else {

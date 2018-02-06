@@ -5,10 +5,14 @@
  */
 package ist411socket;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -17,22 +21,71 @@ import java.util.HashMap;
 public class PublicView {
 
     private StringBuilder html = new StringBuilder();
-
+//    private ImageIcon image = new ImageIcon("fw.jpg");
+    
     public PublicView() {
 
 //        html.append("<b>Hello World!</b><BR>");
 //        html.append("</html>");
     }
 
-    public String getHtml(String filePath) {
+    public String getHtml(String filePath) throws IOException {
 //        html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\n" +
 //"   \"http://www.w3.org/TR/html4/strict.dtd\">");
         html.append("<html><body>");
 
-        html.append("<img src=\"" + "fw.jpg" + "\" alt=\"Flowers in Chania\">");
-        System.out.println("FilePath from View test: <img src=\"" + "fw.jpg" + "\" alt=\"Flowers in Chania\">");
+//        html.append("<img src=\"" + image.getImage() + "\" alt=\"Flowers in Chania\">");
+               html.append("<img src=\"" + "fw.jpg" + "\" alt=\"Flowers in Chania\">");
+        
+               
+               File f = new File("rb.png");
+               byte[] buffer = new byte[1024];
+               ByteArrayOutputStream os = new ByteArrayOutputStream();
+               FileInputStream fis = new FileInputStream(f);
+               int read;
+               while ((read = fis.read(buffer))!= -1){
+               os.write(buffer, 0 ,read);
+               }
+               fis.close();
+               os.close();
+               os.toByteArray();
+               
+//        html.append(image.getImage());
+//        html.append(html)
+        
+        System.out.println("FilePath from View test: <img src=\"" + "\" alt=\"Flowers in Chania\">");
 
         html.append("</body></html>");
         return html.toString();
+    }
+    
+        public static byte[] getBytes(File f) throws IOException {
+//        html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\n" +
+//"   \"http://www.w3.org/TR/html4/strict.dtd\">");
+//        html.append("<html><body>");
+
+//        html.append("<img src=\"" + image.getImage() + "\" alt=\"Flowers in Chania\">");
+//               html.append("<img src=\"" + "fw.jpg" + "\" alt=\"Flowers in Chania\">");
+        
+//               
+//               File f = new File("jw.jpg");
+               byte[] buffer = new byte[1024];
+               ByteArrayOutputStream os = new ByteArrayOutputStream();
+               FileInputStream fis = new FileInputStream(f);
+               int read;
+               while ((read = fis.read(buffer))!= -1){
+               os.write(buffer, 0 ,read);
+               }
+               fis.close();
+               os.close();
+             return  os.toByteArray();
+               
+//        html.append(image.getImage());
+//        html.append(html)
+        
+//        System.out.println("FilePath from View test: <img src=\"" + "\" alt=\"Flowers in Chania\">");
+//
+//        html.append("</body></html>");
+//        return html.toString();
     }
 }
